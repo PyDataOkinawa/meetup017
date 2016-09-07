@@ -39,3 +39,62 @@ Dockerを起動すると、`/magenta`というディレクトリに降り立ち�
 ```bash:
 brew install timidity
 ```
+
+## 使い方（ここからの内容はPyData.Okinawa Meetupの当日にカバーします）
+
+### 共有フォルダにスクリプトを配置
+
+先ずは、このGitHubのコンテンツをローカル環境に落としてきます。一時的に置くだけなので、どこに落としてきても良いです。`docker`というフォルダが含まれていることを確認して下さい。
+
+次にDockerを起動させた状態で、`docker`というフォルダの中にある`script`と`midi`というフォルダの両方を、ローカルの`/tmp/magenta`の中にコピーして下さい。
+
+この状態で、Dockerにアクセスできるターミナル上で`cd /magenta-data/script`と入力します。
+
+### MIDIファイルの設置
+
+ローカルの`/tmp/magenta/midi/`の中に学習に用いたいMIDI形式のファイルを配置します。ディレクトリ構造をもたせても大丈夫です。
+
+### データセットの生成
+
+```
+./build_dataset.sh
+```
+
+このコマンドにより `./tmp/notesequences.tfrecord`  という1つのファイルが生成されます。
+すべてのMIDIファイルが、TensorFlowで扱いやすい形に変換され、最終的にこの1つのファイルにまとめられます。
+
+### モデルの学習
+
+```
+./train_rnn.sh basic_rnn
+```
+
+このコマンドにより２つの処理が実行されます。
+
+１つ目の処理は学習データと評価データの分割です。
+
+ `./tmp/basic_rnn/sequences_exampels` 以下に
+
+- `training_melodies.tfrecord`
+- `eval_melodies.tfrecord`
+
+というデータがそれぞれ作成されます。
+
+２つ目の処理はモデルの学習です。
+
+`basic_rnn`のところを`lookback_rnn`や`attention_rnn`とすることで異なるモデルを訓練することもできます。
+
+学習ログは `./tmp/basic_rnn/sequences_exampels/logdir/` 以下に記録されます。
+
+ブラウザのアドレスバーに`localhost:6006`と入力すると、TensorBoardがログディレクトリの中に記録された情報を読み取り、学習の進捗状況をリアルタイムで確認できます。
+
+### 音楽の生成
+
+```
+./generate_melodies.sh basic_rnn
+```
+
+このコマンドにより
+`tmp/basic_rnn/generated/`以下ににMIDIファイルが生成されます。
+
+Docker上ではMIDIを再生できないので、ローカルの `/tmp/magenta/script/tmp/basic_rnn_generated` 以下に同期されているファイルをTimidityなどで再生してみてください。
