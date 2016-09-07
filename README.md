@@ -1,6 +1,6 @@
 # PyData.Okinawa Meetup #17 - Magentaで音楽生成
 
-2016年09月17日（土）に開催予定のPyData.Okinawa Meetup #17 - Magentaで音楽生成の発表資料等をまとめたページです。
+2016年09月17日（土）に開催予定の[PyData.Okinawa Meetup #17 - Magenta](http://pydataokinawa.connpass.com/event/39806/)で音楽生成の発表資料等をまとめたページです。
 
 ## 環境設定
 
