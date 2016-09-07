@@ -71,7 +71,7 @@ brew install timidity
 
 このコマンドにより２つの処理が実行されます。
 
-１つ目の処理は学習データと評価データの分割です。
+１つ目の処理は学習データと評価データの分割です。
 
  `./tmp/basic_rnn/sequences_exampels` 以下に
 
