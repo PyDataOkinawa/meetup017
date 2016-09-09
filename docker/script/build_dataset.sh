@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# ====== How to use this script =====
+# ./build_dataset.sh
+# ===================================
+
 echo "Start generating dataset..."
 
 case ${OSTYPE} in
