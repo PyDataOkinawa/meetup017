@@ -20,11 +20,11 @@ else
 fi
 
 if [ $RNN_TYPE = basic_rnn ]; then
-  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[32,32]}"
+  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[128,128]}"
 elif [ $RNN_TYPE = lookback_rnn ]; then
-  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[32,32]}"
+  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[128,128]}"
 elif [ $RNN_TYPE = attention_rnn ]; then
-  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[32,32]}"
+  HPARAMS="{'batch_size':32,'rnn_layer_sizes':[128,128]}"
 else
   echo "$RNN_TYPE is an invalid parameter. Use basic_rnn, lookback_rnn, or attention_rnn."
   exit 1
