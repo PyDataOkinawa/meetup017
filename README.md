@@ -60,7 +60,7 @@ brew install timidity
 ./build_dataset.sh
 ```
 
-このコマンドにより `./tmp/notesequences.tfrecord`  という1つのファイルが生成されます。
+このコマンドにより `./tmp/notesequences.tfrecord`  というファイルが生成されます。
 すべてのMIDIファイルが、TensorFlowで扱いやすい形に変換され、最終的にこの1つのファイルにまとめられます。
 
 ### モデルの学習
@@ -84,17 +84,26 @@ brew install timidity
 
 `basic_rnn`のところを`lookback_rnn`や`attention_rnn`とすることで異なるモデルを訓練することもできます。
 
-学習ログは `./tmp/basic_rnn/sequences_exampels/logdir/` 以下に記録されます。
+学習ログは `./tmp/basic_rnn/logdir/` 以下作られる`160909-1`のような名前（日付+実行回数）のディレクトリの中に記録されます。
 
 ブラウザのアドレスバーに`localhost:6006`と入力すると、TensorBoardがログディレクトリの中に記録された情報を読み取り、学習の進捗状況をリアルタイムで確認できます。
+
+TensorBoardが実行されるポートを変更したい場合は、以下のようにしてください。
+ここでは6007番を指定しているので、`localhost:6007`とすることでTensorBoardにアクセスできます。
+
+```
+./train_rnn.sh basic_rnn 6007
+```
 
 ### 音楽の生成
 
 ```
-./generate_melodies.sh basic_rnn
+./generate_melodies.sh basic_rnn 160909-1
 ```
 
-このコマンドにより
-`tmp/basic_rnn/generated/`以下ににMIDIファイルが生成されます。
+`basic_rnn`はモデルの名前、`160909-1`は音楽生成に使いたいモデルが保存されているディレクトリの名前です。この２つの値は、使用したモデルやスクリプトが実行された日付に左右されるので、ご自分のシミュレーション環境に合わせて適宜変更して下さい。
 
-Docker上ではMIDIを再生できないので、ローカルの `/tmp/magenta/script/tmp/basic_rnn_generated` 以下に同期されているファイルをTimidityなどで再生してみてください。
+このコマンドにより
+`tmp/basic_rnn/generated/160909-1/`以下ににMIDIファイルが生成されます。
+
+Docker上ではMIDIを再生できないので、ローカルの `/tmp/magenta/script/tmp/basic_rnn/generated/160909-1` 以下に同期されているファイルをTimidityなどで再生してみてください。
