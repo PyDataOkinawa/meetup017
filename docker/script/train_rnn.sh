@@ -62,6 +62,8 @@ bazel run //magenta/models/$RNN_TYPE:${RNN_TYPE}_create_dataset -- \
 --output_dir=$DATASET_DIR \
 --eval_ratio=$EVAL_RATIO
 
+bazel build //magenta/models/${RNN_TYPE}:${RNN_TYPE}_train
+
 ./bazel-bin/magenta/models/$RNN_TYPE/${RNN_TYPE}_train --run_dir=$RUN_DIR --sequence_example_file=$TRAIN_DATA --hparams=$HPARAMS --num_training_steps=$NUM_TRAINING_STEPS &
 
 ./bazel-bin/magenta/models/$RNN_TYPE/${RNN_TYPE}_train --run_dir=$RUN_DIR --sequence_example_file=$EVAL_DATA --hparams=$HPARAMS --num_training_steps=$NUM_TRAINING_STEPS --eval &
