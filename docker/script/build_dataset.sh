@@ -1,8 +1,42 @@
 #!/bin/bash
 #
 # ====== How to use this script =====
+# Default usage:
+#
 # ./build_dataset.sh
+#
+# Custom usage:
+#
+# ./build_dataset.sh -t chopin -m ~/midi/chopin
+#
+# -t, --tmpdir: a name of the tmp directory created under the current directory
+# -m, --mididir: a path of the midi directory
 # ===================================
+
+CURR_DIR=`pwd`
+
+# http://stackoverflow.com/questions/192249/how-do-i-parse-command-line-arguments-in-bash
+while [[ $# -gt 1 ]]
+do
+key="$1"
+case $key in
+    -t|--tmpdir)
+    TMP_DIR="$2"
+    shift # past argument
+    ;;
+    -m|--mididir)
+    MIDI_DIR="$2"
+    shift # past argument
+    ;;
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
 
 echo "Start generating dataset..."
 
@@ -10,17 +44,26 @@ case ${OSTYPE} in
   linux*)
     # Docker
     MAGENTA_DIR=/magenta
-    MIDI_DIR=/magenta-data/midi
+    if [ -z "$MIDI_DIR" ]; then
+      MIDI_DIR=/magenta-data/midi
+    fi
     ;;
   darwin*)
     # Local
     MAGENTA_DIR=$HOME/git/magenta
-    MIDI_DIR=$(dirname `pwd`)/midi
+    if [ -z "$MIDI_DIR" ]; then
+      MIDI_DIR=$(dirname `pwd`)/midi
+    fi
     ;;
 esac
 
-CURR_DIR=`pwd`
-TMP_DIR=$CURR_DIR/tmp
+# Create the tmp directory under the current directory
+if [ -n "$TMP_DIR" ]; then
+  TMP_DIR=$CURR_DIR/$TMP_DIR
+else
+  TMP_DIR=$CURR_DIR/tmp
+fi
+
 mkdir -p $TMP_DIR
 
 cd $MAGENTA_DIR
@@ -28,7 +71,6 @@ cd $MAGENTA_DIR
 # TFRecord file that will contain NoteSequence protocol buffers.
 SEQUENCES_TFRECORD=$TMP_DIR/notesequences.tfrecord
 
-bazel run //magenta/scripts:convert_midi_dir_to_note_sequences -- \
---midi_dir=$MIDI_DIR \
---output_file=$SEQUENCES_TFRECORD \
---recursive
+bazel build magenta/scripts:convert_midi_dir_to_note_sequences
+
+./bazel-bin/magenta/scripts/convert_midi_dir_to_note_sequences --midi_dir=$MIDI_DIR --output_file=$SEQUENCES_TFRECORD --recursive
