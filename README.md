@@ -66,7 +66,7 @@ brew install timidity
 ### モデルの学習
 
 ```
-./train_rnn.sh basic_rnn
+./train_rnn.sh -r basic_rnn
 ```
 
 このコマンドにより２つの処理が実行されます。
@@ -92,13 +92,13 @@ TensorBoardが実行されるポートを変更したい場合は、以下のよ
 ここでは6007番を指定しているので、`localhost:6007`とすることでTensorBoardにアクセスできます。
 
 ```
-./train_rnn.sh basic_rnn 6007
+./train_rnn.sh -r basic_rnn -p 6007
 ```
 
 ### 音楽の生成
 
 ```
-./generate_melodies.sh basic_rnn 160909-1
+./generate_melodies.sh -r basic_rnn -n 160909-1
 ```
 
 `basic_rnn`はモデルの名前、`160909-1`は音楽生成に使いたいモデルが保存されているディレクトリの名前です。この２つの値は、使用したモデルやスクリプトが実行された日付に左右されるので、ご自分のシミュレーション環境に合わせて適宜変更して下さい。
@@ -107,3 +107,52 @@ TensorBoardが実行されるポートを変更したい場合は、以下のよ
 `tmp/basic_rnn/generated/160909-1/`以下ににMIDIファイルが生成されます。
 
 Docker上ではMIDIを再生できないので、ローカルの `/tmp/magenta/script/tmp/basic_rnn/generated/160909-1` 以下に同期されているファイルをTimidityなどで再生してみてください。
+
+### その他のパラメータ
+
+すべてのシミュレーションの結果は、（ローカルであれば）`/tmp/magenta/script`以下の`tmp`というフォルダの中に保存されました。これを変更するには、各コマンドに`-t tmp2`のような形で引数を渡せばOKです。`-t output/beatles`などのようにすることもできます。
+
+また、ハイパーパラメータを変更するには `-h  "{'batch_size':32,'rnn_layer_sizes':[128,128]}"` という形で各コマンドに引数を渡せばOKです。
+
+これらの名前付き引数を使うと、全体を流れは以下のように書くことができます。
+
+```
+# データセットの生成
+./build_dataset.sh -t output/beatles -m /magenta-data/midi/beatles
+
+# モデルの学習
+./train_rnn.sh -t output/beatles -r basic_rnn -p 6007 \
+-h "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
+
+# 音楽の生成
+./generate_melodies.sh -t output/beatles -r basic_rnn -n 160909-1 \
+-h "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
+```
+
+また、以下のスクリプトファイルにデータセットの生成から学習までの流れがまとめられているので、
+
+```
+./run_beatles
+```
+
+というコマンドを打って、一連の流れを確認してみましょう。
+
+## おまけ
+
+### MIDIファイルを他のファイル形式に変換する方法
+
+timidityを使うことで、MIDIファイル（`awesome.mid`）をWAVファイル（`awesome.wav`）に変換することができます。
+
+```
+timidity -Ow awesome.mid
+```
+
+ffmpegを使うことで、生成されたWAVファイルをMP3に変更することができます。
+
+```
+ffmpeg -i awesome.wav awesome.mp3
+```
+
+### 生成した音楽をWebにアップしてシェアする方法
+
+- [clyp](https://clyp.it/)というサイトは簡単に音をシェアできるのでオススメです。MIDI形式は直接アップロードできないので、WAV形式に変換してからアップロードしましょう。

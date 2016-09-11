@@ -7,7 +7,7 @@
 #
 # Custom usage:
 #
-# ./build_dataset.sh -t chopin -m ~/midi/chopin
+# ./build_dataset.sh -t output/beatles -m /magenta-data/midi/beatles
 #
 # -t, --tmpdir: a name of the tmp directory created under the current directory
 # -m, --mididir: a path of the midi directory
@@ -27,9 +27,6 @@ case $key in
     -m|--mididir)
     MIDI_DIR="$2"
     shift # past argument
-    ;;
-    --default)
-    DEFAULT=YES
     ;;
     *)
             # unknown option

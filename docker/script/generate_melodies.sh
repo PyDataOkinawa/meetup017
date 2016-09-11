@@ -1,10 +1,23 @@
 #!/bin/bash
 #
 # ====== How to use this script =====
-# ./generate_melodies.sh basic_rnn 160909-1
+# Default usage:
 #
-# `basic_rnn` can be replaced by `lookback_rnn` or `attention_rnn`.
-# `160909-1` is a name of the log director with your trained model.
+# ./generate_melodies.sh -n 160909-1
+#
+# Custom usage:
+#
+# ./generate_melodies.sh -n 160909-1 -t output/beatles -r basic_rnn \
+# -h "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
+#
+# -n, --runname: (REQUIRED) a name of a log directory with your trained model
+# -t, --tmpdir: a name of the tmp directory created under the current directory
+#   default: tmp
+# -r, --rnntype: a type of recurrent network
+#   possible values: {basic_rnn, lookback_rnn, attention_rnn}
+#   default: basic_rnn
+# -h, --hparams: hyperparameters
+#   default: "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
 # ===================================
 
 CURR_DIR=`pwd`
@@ -14,6 +27,10 @@ while [[ $# -gt 1 ]]
 do
 key="$1"
 case $key in
+    -n|--runname)
+    RUN_NAME="$2"
+    shift # past argument
+    ;;
     -t|--tmpdir)
     TMP_DIR="$2"
     shift # past argument
@@ -22,16 +39,9 @@ case $key in
     RNN_TYPE="$2"
     shift # past argument
     ;;
-    -n|--runname)
-    RUN_NAME="$2"
-    shift # past argument
-    ;;
     -h|--hparams)
     HPARAMS="$2"
     shift # past argument
-    ;;
-    --default)
-    DEFAULT=YES
     ;;
     *)
             # unknown option
@@ -102,6 +112,6 @@ bazel run //magenta/models/${RNN_TYPE}:${RNN_TYPE}_generate -- \
 --hparams=$HPARAMS \
 --output_dir=$OUTPUT_DIR \
 --num_outputs=5 \
---num_steps=512
-#--primer_midi=${PRIMER_PATH}
+--num_steps=512 \
+--primer_midi=${PRIMER_PATH}
 #--primer_melody="[60]"

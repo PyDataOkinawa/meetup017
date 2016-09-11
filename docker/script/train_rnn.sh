@@ -1,11 +1,24 @@
 #!/bin/bash
 #
 # ====== How to use this script =====
-# ./train_rnn basic_rnn 6007
+# Default usage:
 #
-# `basic_rnn` can be replaced by `lookback_rnn` or `attention_rnn`.
-# `6007` is a port number for the TensorBoard. If the port number is omitted,
-# this value is automatically set to `6006`.
+# ./train_rnn.sh
+#
+# Custom usage:
+#
+# ./train_rnn.sh -t output/beatles -r basic_rnn -p 6007 \
+# -h "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
+#
+# -t, --tmpdir: a name of the tmp directory created under the current directory
+#   default: tmp
+# -r, --rnntype: a type of recurrent network
+#   possible values: {basic_rnn, lookback_rnn, attention_rnn}
+#   default: basic_rnn
+# -p, --port: a port number for the TensorBoard.
+#   default: 6006
+# -h, --hparams: hyperparameters
+#   default: "{'batch_size':32,'rnn_layer_sizes':[128,128]}"
 # ===================================
 #
 # This script is inspired by  magenta/magenta/models/basic_rnn/run_basic_rnn_train.sh
@@ -44,9 +57,6 @@ case $key in
     -h|--hparams)
     HPARAMS="$2"
     shift # past argument
-    ;;
-    --default)
-    DEFAULT=YES
     ;;
     *)
             # unknown option
