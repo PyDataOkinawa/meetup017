@@ -156,3 +156,4 @@ ffmpeg -i awesome.wav awesome.mp3
 ### 生成した音楽をWebにアップしてシェアする方法
 
 - [clyp](https://clyp.it/)というサイトは簡単に音をシェアできるのでオススメです。MIDI形式は直接アップロードできないので、WAV形式に変換してからアップロードしましょう。
+- [このような感じ](https://clyp.it/k4qgeqkf)でシェアできます。

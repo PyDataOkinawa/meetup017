@@ -112,6 +112,6 @@ bazel run //magenta/models/${RNN_TYPE}:${RNN_TYPE}_generate -- \
 --hparams=$HPARAMS \
 --output_dir=$OUTPUT_DIR \
 --num_outputs=5 \
---num_steps=512 \
---primer_midi=${PRIMER_PATH}
+--num_steps=512
+#--primer_midi=${PRIMER_PATH}
 #--primer_melody="[60]"
