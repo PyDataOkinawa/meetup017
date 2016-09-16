@@ -232,7 +232,7 @@ ${RNN_TYPE}_generate -- \
 
 # `./generate_melodies.sh` 後の構成
 
-`./generate_melodies.sh -n 160916-1`
+`./generate_melodies.sh -r basic_rnn -n 160916-1`
 
 ```
 .
@@ -272,13 +272,9 @@ Step 4: [0,0,1,0,0]
 - 1小節前の繰り返し（repeat-1-bar-ago）
 RNNのセルを使わず情報を保持。名前の由来。
 
-
-
 ---
 
 # Attention RNN
-
-
 
 - [最近のDeep Learning (NLP) 界隈におけるAttention事情](http://www.slideshare.net/yutakikuchi927/deep-learning-nlp-attention)
 - [Generating Long-Term Structure in Songs and Stories](https://magenta.tensorflow.org/2016/07/15/lookback-rnn-attention-rnn/)
