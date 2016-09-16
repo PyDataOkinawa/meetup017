@@ -30,12 +30,14 @@ fi
 
 cd $MAGENTA_DIR
 
+bazel build //magenta/interfaces/midi:midi
+
 # List all available ports
 bazel-bin/magenta/interfaces/midi/midi --list
 
 bazel-bin/magenta/interfaces/midi/midi \
 --input_port="VMPK Output" \
---output_port="VMPK Input" \
+--output_port="FluidSynth virtual port (4644)" \
 --generator_name=$RNN_TYPE \
---checkpoint=$TMP_DIR/$RNN_TYPE/logdir/run1/train \
+--checkpoint=$TMP_DIR/$RNN_TYPE/logdir/160909-3/train \
 --hparams=$HPARAMS
