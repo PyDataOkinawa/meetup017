@@ -63,11 +63,10 @@ fi
 
 mkdir -p $TMP_DIR
 
-cd $MAGENTA_DIR
-
 # TFRecord file that will contain NoteSequence protocol buffers.
 SEQUENCES_TFRECORD=$TMP_DIR/notesequences.tfrecord
 
-bazel build magenta/scripts:convert_midi_dir_to_note_sequences
-
-./bazel-bin/magenta/scripts/convert_midi_dir_to_note_sequences --midi_dir=$MIDI_DIR --output_file=$SEQUENCES_TFRECORD --recursive
+convert_midi_dir_to_note_sequences \
+    --midi_dir=$MIDI_DIR \
+    --output_file=$SEQUENCES_TFRECORD \
+    --recursive

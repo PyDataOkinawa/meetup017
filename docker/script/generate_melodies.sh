@@ -102,16 +102,14 @@ LOG_DIR=$MODEL_DIR/logdir
 RUN_DIR=$LOG_DIR/$RUN_NAME
 OUTPUT_DIR=$MODEL_DIR/generated/$RUN_NAME
 
-
 echo "TMP_DIR = " $TMP_DIR
 
-cd $MAGENTA_DIR
-
-bazel run //magenta/models/${RNN_TYPE}:${RNN_TYPE}_generate -- \
---run_dir=$RUN_DIR \
---hparams=$HPARAMS \
---output_dir=$OUTPUT_DIR \
---num_outputs=5 \
---num_steps=512
+melody_rnn_generate \
+    --config=$RNN_TYPE \
+    --run_dir=$RUN_DIR \
+    --hparams=$HPARAMS \
+    --output_dir=$OUTPUT_DIR \
+    --num_outputs=5 \
+    --num_steps=512
 #--primer_midi=${PRIMER_PATH}
 #--primer_melody="[60]"

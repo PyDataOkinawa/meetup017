@@ -122,25 +122,33 @@ EVAL_DATA=$DATASET_DIR/eval_melodies.tfrecord
 # Fraction of input data that will be written to the eval dataset (if eval_output flag is set).
 EVAL_RATIO=0.10
 
-cd $MAGENTA_DIR
-
 if [ -d $DATASET_DIR ]; then
   echo "Using pre-existing datasets for training and evaluation..."
 else
   echo "Creating datasets for training and evaluation..."
 
-  bazel run //magenta/models/$RNN_TYPE:${RNN_TYPE}_create_dataset -- \
-  --input=$SEQUENCES_TFRECORD \
-  --output_dir=$DATASET_DIR \
-  --eval_ratio=$EVAL_RATIO
+  melody_rnn_create_dataset \
+      --config=$RNN_TYPE \
+      --input=$SEQUENCES_TFRECORD \
+      --output_dir=$DATASET_DIR \
+      --eval_ratio=$EVAL_RATIO
 fi
-
-bazel build //magenta/models/${RNN_TYPE}:${RNN_TYPE}_train
 
 echo "Start training the model..."
 
-./bazel-bin/magenta/models/$RNN_TYPE/${RNN_TYPE}_train --run_dir=$RUN_DIR --sequence_example_file=$TRAIN_DATA --hparams=$HPARAMS --num_training_steps=$NUM_TRAINING_STEPS --eval=false &
+melody_rnn_train \
+    --config=$RNN_TYPE \
+    --run_dir=$RUN_DIR \
+    --sequence_example_file=$TRAIN_DATA \
+    --hparams=$HPARAMS \
+    --num_training_steps=$NUM_TRAINING_STEPS &
 
-./bazel-bin/magenta/models/$RNN_TYPE/${RNN_TYPE}_train --run_dir=$RUN_DIR --sequence_example_file=$EVAL_DATA --hparams=$HPARAMS --num_training_steps=$NUM_TRAINING_STEPS --eval=true &
+melody_rnn_train \
+    --config=$RNN_TYPE \
+    --run_dir=$RUN_DIR \
+    --sequence_example_file=$EVAL_DATA \
+    --hparams=$HPARAMS \
+    --num_training_steps=$NUM_TRAINING_STEPS \
+    --eval
 
 tensorboard --logdir=$LOG_DIR --port=$TB_PORT &
